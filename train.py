@@ -2,6 +2,8 @@ import argparse
 
 import torch
 
+from utils import load_data
+
 def argument_parser():
     p = argparse.ArgumentParser()
 
@@ -13,10 +15,15 @@ def argument_parser():
     return config
 
 def main(config):
-    # Define device
+    # Set device
     device = torch.device("cpu") if config.gpu_id < 0  else torch.device(f"cuda:{config.gpu_id}")
+    print(f"Device : {device}")
 
     # Load Data
+    x, y = load_data()
+
+    print(f"Train Data : {x.shape}")
+    print(f"Target Data : {y.shape}")
 
     # Define model
 
