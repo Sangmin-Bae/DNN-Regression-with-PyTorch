@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 
 from model import MyDNNModel
+from trainer import Trainer
 
 from utils import load_data
 
@@ -34,13 +35,22 @@ def main(config):
 
     # Define model
     model = MyDNNModel(input_size=x.size(-1), output_size=y.size(-1)).to(device)
+    print(f"Model: {model}")
 
     # Set optimizer
     optimizer = optim.SGD(model.parameters(), lr=config.lr)
+    print(f"Optimizer: {optimizer}")
 
     # Train model
+    trainer = Trainer(model, optimizer)
+    trainer.train(x.to(device), y.to(device), config)
 
     # Save best model
+    torch.save({
+        "model": trainer.model.state_dict(),
+        "opt": optimizer.state_dict(),
+        "config": config
+    }, config.model_fn)
 
 if __name__ == "__main__":
     config = argument_parser()
