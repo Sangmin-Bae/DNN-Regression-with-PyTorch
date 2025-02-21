@@ -42,10 +42,10 @@ def load_california_housing_data():
 
     return x, y
 
-def load_data(config):
-    if config.data_number == 1:
+def load_data(data_number):
+    if data_number == 1:
         x, y = load_boston_house_prices_data()
-    elif config.data_number == 2:
+    elif data_number == 2:
         x, y = load_california_housing_data()
     else:
         raise ValueError()
