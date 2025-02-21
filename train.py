@@ -7,7 +7,7 @@ import torch.optim as optim
 from model import MyDNNModel
 from trainer import Trainer
 
-from utils import load_data
+from utils import load_boston_house_prices_data
 
 def argument_parser():
     p = argparse.ArgumentParser()
@@ -28,7 +28,7 @@ def main(config):
     print(f"Device : {device}")
 
     # Load Data
-    x, y = load_data()
+    x, y = load_boston_house_prices_data()
 
     print(f"Train Data : {x.shape}")
     print(f"Target Data : {y.shape}")

@@ -5,7 +5,7 @@ import torch
 
 from sklearn.preprocessing import StandardScaler
 
-def load_data():
+def load_boston_house_prices_data():
     df = pd.read_csv("./data/boston_house_prices.csv", skiprows=1, dtype=np.float32)
     df.rename(columns={"MEDV" : "TARGET"}, inplace=True)
 

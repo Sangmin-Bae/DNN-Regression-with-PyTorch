@@ -3,7 +3,7 @@ import torch
 
 from model import MyDNNModel
 
-from utils import load_data
+from utils import load_boston_house_prices_data
 
 def load(model_fn, device):
     d = torch.load(model_fn, map_location=device, weights_only=False)
@@ -32,7 +32,7 @@ def main():
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
     # Load Data
-    x, y = load_data()
+    x, y = load_boston_house_prices_data()
 
     # Define Model
     model_dict, config = load(model_fn, device)
