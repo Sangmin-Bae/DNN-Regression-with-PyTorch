@@ -13,7 +13,9 @@ def argument_parser():
     p = argparse.ArgumentParser()
 
     p.add_argument("--model_fn", required=True, help="model_file_name")
+    p.add_argument("--data_number", type=int, default=1, help="data number [1: boston / 2: california]")
     p.add_argument("--gpu_id", type=int, default=0 if torch.cuda.is_available() else -1, help="number_of_gpu_id")
+    p.add_argument("--batch_size", type=int, defautl=256, help="mini_batch_size")
     p.add_argument("--n_epochs", type=int, default=100000, help="number_of_epochs")
     p.add_argument("--lr", type=float, default=1e-4, help="learning_rate")
     p.add_argument("--print_interval", type=int, default=5000, help="number_of_print_interval")
