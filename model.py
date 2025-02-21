@@ -29,8 +29,8 @@ class MyDNNModel(nn.Module):
         return y
 
 class MyDNNModelV2(nn.Module):
-    def __init__(self, intput_size, output_size):
-        self.input_size = intput_size
+    def __init__(self, input_size, output_size):
+        self.input_size = input_size
         self.output_size = output_size
 
         super().__init__()
