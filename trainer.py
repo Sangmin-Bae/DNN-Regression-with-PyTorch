@@ -12,6 +12,21 @@ class Trainer:
 
         super().__init__()
 
+    @ staticmethod
+    def _batchify(self, x, y, batch_size, random_split=True):
+        # Shuffle the index to feed-forward
+        if random_split:
+            indices = torch.randperm(x.size(0), device=x.device)
+            x = torch.index_select(x, dim=0, index=indices)
+            y = torch.index_select(y, dim=0, index=indices)
+
+        # |x| = (batch_size, input_size)
+        x = x.split(batch_size, dim=0)
+        # |y| = (batch_size, output_size)
+        y = y.split(batch_size, dim=0)
+
+        return x,y
+
     def train(self, x, y, config):
         lowest_loss = np.inf
         best_model = None
