@@ -32,17 +32,26 @@ class Trainer:
         best_model = None
 
         for idx in range(config.n_epochs):
-            y_hat = self.model(x)
-            loss = func.mse_loss(y_hat, y)
+            x, y = self._batchify(x, y, config.batch_size)
 
-            # Initialize gradient
-            self.optimizer.zero_grad()
+            total_loss = 0
 
-            # Backpropagation
-            loss.backward()
+            for x_i, y_i in zip(x, y):
+                y_hat_i = self.model(x_i)
+                loss = func.mse_loss(y_hat_i, y_i)
 
-            # Gradient descent
-            self.optimizer.step()
+                # Initialize gradient
+                self.optimizer.zero_grad()
+
+                # Backpropagation
+                loss.backward()
+
+                # Gradient descent
+                self.optimizer.step()
+
+                total_loss += float(loss)  # prevent memory leak by gradient
+
+            loss = total_loss / len(x)  # mean loss
 
             if loss < lowest_loss:
                 lowest_loss = loss
