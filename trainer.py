@@ -13,7 +13,7 @@ class Trainer:
         super().__init__()
 
     @ staticmethod
-    def _batchify(self, x, y, batch_size, random_split=True):
+    def _batchify(x, y, batch_size, random_split=True):
         # Shuffle the index to feed-forward
         if random_split:
             indices = torch.randperm(x.size(0), device=x.device)
@@ -32,11 +32,11 @@ class Trainer:
         best_model = None
 
         for idx in range(config.n_epochs):
-            x, y = self._batchify(x, y, config.batch_size)
+            x_, y_ = self._batchify(x, y, config.batch_size)
 
             total_loss = 0
 
-            for x_i, y_i in zip(x, y):
+            for x_i, y_i in zip(x_, y_):
                 y_hat_i = self.model(x_i)
                 loss = func.mse_loss(y_hat_i, y_i)
 
