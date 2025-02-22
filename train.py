@@ -20,7 +20,6 @@ def argument_parser():
     return args
 
 def load_config(path):
-    config = None
     with open(path) as f:
         config = yaml.safe_load(f)
     return config
