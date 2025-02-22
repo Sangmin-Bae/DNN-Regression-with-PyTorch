@@ -1,7 +1,7 @@
 import pandas as pd
 import torch
 
-from model import MyDNNModelV2
+from model import MyDNNModel
 
 from utils import load_data
 
@@ -26,7 +26,7 @@ def test(model, x, y, to_be_shown=False):
 
 def main():
     # Model weight file path
-    model_fn = "./model/model2.pth"
+    model_fn = "./model/model.pth"
 
     # Set device
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
@@ -35,10 +35,9 @@ def main():
     model_dict, config = load(model_fn, device)
 
     # Load Data
-    x, y = load_data(config.data_number)
+    x, y = load_data()
 
-
-    model = MyDNNModelV2(input_size=x.size(-1), output_size=y.size(-1)).to(device)
+    model = MyDNNModel(input_size=x.size(-1), output_size=y.size(-1)).to(device)
     model.load_state_dict(model_dict)
 
     # Test
