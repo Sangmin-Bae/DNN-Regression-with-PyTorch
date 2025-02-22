@@ -1,9 +1,9 @@
 import pandas as pd
 import torch
 
-from model import MyDNNModel
+from model import MyDNNModelV2
 
-from utils import load_boston_house_prices_data
+from utils import load_data
 
 def load(model_fn, device):
     d = torch.load(model_fn, map_location=device, weights_only=False)
@@ -26,17 +26,19 @@ def test(model, x, y, to_be_shown=False):
 
 def main():
     # Model weight file path
-    model_fn = "./model/model.pth"
+    model_fn = "./model/model2.pth"
 
     # Set device
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
-    # Load Data
-    x, y = load_boston_house_prices_data()
-
     # Define Model
     model_dict, config = load(model_fn, device)
-    model = MyDNNModel(input_size=x.size(-1), output_size=y.size(-1)).to(device)
+
+    # Load Data
+    x, y = load_data(config.data_number)
+
+
+    model = MyDNNModelV2(input_size=x.size(-1), output_size=y.size(-1)).to(device)
     model.load_state_dict(model_dict)
 
     # Test
