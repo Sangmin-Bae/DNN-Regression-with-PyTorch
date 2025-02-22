@@ -31,8 +31,9 @@ class Trainer:
         lowest_loss = np.inf
         best_model = None
 
-        for idx in range(config.n_epochs):
-            x_, y_ = self._batchify(x, y, config.batch_size)
+        for idx in range(config["n_epochs"]):
+            x_, y_ = self._batchify(x, y, config["batch_size"])
+
 
             total_loss = 0
 
@@ -57,7 +58,7 @@ class Trainer:
                 lowest_loss = loss
                 best_model = deepcopy(self.model.state_dict())
 
-            if (idx + 1) % config.print_interval == 0:
+            if (idx + 1) % config["print_interval"] == 0:
                 print(f"Epoch {idx + 1} : loss={float(loss):.4e}")
 
         # Restore best model
