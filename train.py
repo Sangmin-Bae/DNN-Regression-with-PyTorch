@@ -26,7 +26,7 @@ def load_config(path):
 
 def main(config):
     # Set device
-    device = torch.device("cpu") if config.gpu_id < 0  else torch.device(f"cuda:{config['gpu_id']}")
+    device = torch.device("cpu") if config["gpu_id"] < 0  else torch.device(f"cuda:{config['gpu_id']}")
     print(f"Device : {device}")
 
     # Load Data
