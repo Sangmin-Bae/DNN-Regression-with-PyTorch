@@ -1,0 +1,10 @@
+# model file path for save[type: str]
+model_fn: ""
+# GPU id for CUDA[type: int]
+gpu_id:
+# number of epochs[type: int]
+n_epochs:
+# number of batch size[type: int]
+batch_size:
+# printing interval for train loop output[type: int]
+print_interval:
