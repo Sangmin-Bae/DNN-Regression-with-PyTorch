@@ -1,4 +1,5 @@
 import argparse
+import yaml
 
 import torch
 import torch.nn as nn
@@ -12,16 +13,16 @@ from utils import load_data
 def argument_parser():
     p = argparse.ArgumentParser()
 
-    p.add_argument("--model_fn", required=True, help="model_file_name")
-    p.add_argument("--data_number", type=int, default=1, help="data number [1: boston / 2: california]")
-    p.add_argument("--gpu_id", type=int, default=0 if torch.cuda.is_available() else -1, help="number_of_gpu_id")
-    p.add_argument("--batch_size", type=int, default=256, help="mini_batch_size")
-    p.add_argument("--n_epochs", type=int, default=100000, help="number_of_epochs")
-    p.add_argument("--lr", type=float, default=1e-4, help="learning_rate")
-    p.add_argument("--print_interval", type=int, default=5000, help="number_of_print_interval")
+    p.add_argument("--config", type=str, required=True, help="config_file_path")
 
-    config = p.parse_args()
+    args = p.parse_args()
 
+    return args
+
+def load_config(path):
+    config = None
+    with open(path) as f:
+        config = yaml.safe_load(f)
     return config
 
 def main(config):
@@ -55,5 +56,6 @@ def main(config):
     }, config.model_fn)
 
 if __name__ == "__main__":
-    config = argument_parser()
+    args = argument_parser()
+    config = load_config(args.config)
     main(config)
