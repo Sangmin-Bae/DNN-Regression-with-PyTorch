@@ -40,7 +40,7 @@ def main(config):
     print(f"Model: {model}")
 
     # Set optimizer
-    optimizer = optim.SGD(model.parameters(), lr=config.lr)
+    optimizer = optim.Adam(model.parameters())
     print(f"Optimizer: {optimizer}")
 
     # Train model
