@@ -35,8 +35,8 @@ def main(config):
 
     # Split data
     x, y = split_data(x, y, device, config["train_ratio"])
-    train_x, valid_x, test_x = x
-    train_y, valid_y, text_y = y
+    train_x, valid_x = x[0], x[1]
+    train_y, valid_y = y[0], y[1]
 
     # Define model
     model = MyDNNModel(input_size=train_x.size(-1), output_size=train_y.size(-1)).to(device)
@@ -48,7 +48,11 @@ def main(config):
 
     # Train model
     trainer = Trainer(model, optimizer)
-    trainer.train(x, y, config)
+    trainer.train(
+        train_data=(train_x, train_y),
+        valid_data=(valid_x, valid_y),
+        config=config
+    )
 
     # Save best model
     torch.save({

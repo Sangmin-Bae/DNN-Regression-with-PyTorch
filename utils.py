@@ -28,19 +28,19 @@ def split_data(x, y, device, train_ratio=(.6, .2, .2)):
 
     # shuffle
     indices = torch.randperm(x.size(0))
-    x_ = torch.index_select(x, dim=0, index=indices)
+    x = torch.index_select(x, dim=0, index=indices)
     y_ = torch.index_select(y, dim=0, index=indices)
 
     # Split
-    x_ = list(x_.split(cnt, dim=0))
+    x = list(x.split(cnt, dim=0))
     y = list(y_.split(cnt, dim=0))
 
     # Standardization - mean = 0, variance = 1
     scaler = StandardScaler()
-    scaler.fit(x_[0].numpy())
-    x[0] = torch.from_numpy(scaler.transform(x_[0].numpy())).float()
-    x[1] = torch.from_numpy(scaler.transform(x_[1].numpy())).float()
-    x[2] = torch.from_numpy(scaler.transform(x_[2].numpy())).float()
+    scaler.fit(x[0].numpy())
+    x[0] = torch.from_numpy(scaler.transform(x[0].numpy())).float()
+    x[1] = torch.from_numpy(scaler.transform(x[1].numpy())).float()
+    x[2] = torch.from_numpy(scaler.transform(x[2].numpy())).float()
 
     # torch to device
     for idx in range(len(x)):
