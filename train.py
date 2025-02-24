@@ -34,12 +34,12 @@ def main(config):
     x, y = load_data()
 
     # Split data
-    x, y = split_data(x.to(device), y.to(device), device, config["train_ratio"])
+    x, y = split_data(x, y, device, config["train_ratio"])
     train_x, valid_x, test_x = x
-    train_y, valid_yq, text_y = y
+    train_y, valid_y, text_y = y
 
     # Define model
-    model = MyDNNModel(input_size=x.size(-1), output_size=y.size(-1)).to(device)
+    model = MyDNNModel(input_size=train_x.size(-1), output_size=train_y.size(-1)).to(device)
     print(f"Model: {model}")
 
     # Set optimizer
@@ -60,4 +60,4 @@ def main(config):
 if __name__ == "__main__":
     args = argument_parser()
     config = load_config(args.config)
-    # main(config)
+    main(config)
