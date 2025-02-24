@@ -27,39 +27,69 @@ class Trainer:
 
         return x,y
 
-    def train(self, x, y, config):
-        lowest_loss = np.inf
-        best_model = None
+    def _train(self, x, y, config):
+        self.model.train()
 
-        for idx in range(config["n_epochs"]):
-            x_, y_ = self._batchify(x, y, config["batch_size"])
+        x, y = self._batchify(x, y, config["batch_size"], random_split=True)
+        total_loss = 0
 
+        for idx, (x_i, y_i) in enumerate(zip(x, y)):
+            y_hat_i = self.model(x_i)
+            loss_i = func.mse_loss(y_hat_i, y_i)
 
+            # Initialize gradient
+            self.optimizer.zero_grad()
+
+            # Backpropagation
+            loss_i.backward()
+
+            # Gradient descent
+            self.optimizer.step()
+
+            total_loss += float(loss_i)
+
+        return total_loss / len(x)
+
+    def _validate(self, x, y, config):
+        self.model.eval()
+
+        with torch.no_grad():
+            x, y = self._batchify(x, y, config["batch_size"], random_split=False)
             total_loss = 0
 
-            for x_i, y_i in zip(x_, y_):
+            for idx, (x_i, y_i) in enumerate(zip(x, y)):
                 y_hat_i = self.model(x_i)
-                loss = func.mse_loss(y_hat_i, y_i)
+                loss_i = func.mse_loss(y_hat_i, y_i)
 
-                # Initialize gradient
-                self.optimizer.zero_grad()
+                total_loss += float(loss_i)
 
-                # Backpropagation
-                loss.backward()
+            return total_loss / len(x)
 
-                # Gradient descent
-                self.optimizer.step()
 
-                total_loss += float(loss)  # prevent memory leak by gradient
+    def train(self, train_data, valid_data, config):
+        lowest_loss = np.inf
+        lowest_epoch = np.inf
+        best_model = None
 
-            loss = total_loss / len(x)  # mean loss
+        for epoch_idx in range(config["n_epochs"]):
+            train_loss = self._train(train_data[0], train_data[1], config)
+            valid_loss = self._validate(valid_data[0], valid_data[1], config)
 
-            if loss < lowest_loss:
-                lowest_loss = loss
+            if (epoch_idx + 1) % config["print_interval"] == 0:
+                print(f"Epoch {epoch_idx + 1}: train_loss={train_loss: .4e} valid_loss={valid_loss: .4e} "
+                      f"lowest_loss={lowest_loss: .4e}")
+
+            if valid_loss <= lowest_loss:
+                lowest_loss = valid_loss
+                lowest_epoch = epoch_idx
+
                 best_model = deepcopy(self.model.state_dict())
+            else:
+                if config["early_stop"] > 0 and lowest_epoch + config["early_stop"] < epoch_idx + 1:
+                    print(f"There is no improvement during last {config['early_stop']} epochs.")
+                    break
 
-            if (idx + 1) % config["print_interval"] == 0:
-                print(f"Epoch {idx + 1} : loss={float(loss):.4e}")
+        print(f"The best validation loss from epoch {lowest_epoch + 1, lowest_loss}")
 
         # Restore best model
         self.model.load_state_dict(best_model)
