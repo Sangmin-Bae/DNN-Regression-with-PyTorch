@@ -9,6 +9,7 @@ from model import MyDNNModel
 from trainer import Trainer
 
 from utils import load_data
+from utils import split_data
 
 def argument_parser():
     p = argparse.ArgumentParser()
@@ -32,8 +33,10 @@ def main(config):
     # Load Data
     x, y = load_data()
 
-    print(f"Train Data : {x.shape}")
-    print(f"Target Data : {y.shape}")
+    # Split data
+    x, y = split_data(x.to(device), y.to(device), device, config["train_ratio"])
+    train_x, valid_x, test_x = x
+    train_y, valid_yq, text_y = y
 
     # Define model
     model = MyDNNModel(input_size=x.size(-1), output_size=y.size(-1)).to(device)
@@ -45,7 +48,7 @@ def main(config):
 
     # Train model
     trainer = Trainer(model, optimizer)
-    trainer.train(x.to(device), y.to(device), config)
+    trainer.train(x, y, config)
 
     # Save best model
     torch.save({
@@ -57,4 +60,4 @@ def main(config):
 if __name__ == "__main__":
     args = argument_parser()
     config = load_config(args.config)
-    main(config)
+    # main(config)
