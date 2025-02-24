@@ -1,10 +1,16 @@
 # model file path for save[type: str]
 model_fn: ""
 # GPU id for CUDA[type: int]
+train_ratio:
+  -   # train ratio[type: float]
+  -   # valid ratio[type: float]
+  -   # test ratio[type: float]
 gpu_id:
 # number of epochs[type: int]
 n_epochs:
 # number of batch size[type: int]
 batch_size:
+# number of waiting epoch for early train stop if lowest valid_loss no change[type: int]
+early_stop:
 # printing interval for train loop output[type: int]
 print_interval:
