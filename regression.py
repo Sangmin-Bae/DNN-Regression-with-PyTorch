@@ -4,6 +4,7 @@ import torch
 from model import MyDNNModel
 
 from utils import load_data
+from utils import split_data
 
 def load(model_fn, device):
     d = torch.load(model_fn, map_location=device, weights_only=False)
@@ -11,6 +12,8 @@ def load(model_fn, device):
     return d["model"], d["config"]
 
 def test(model, x, y, to_be_shown=False):
+    model.eval()
+
     with torch.no_grad():
         y_hat = model(x)
 
@@ -36,12 +39,15 @@ def main():
 
     # Load Data
     x, y = load_data()
+    x, y = split_data(x, y, device, config["train_ratio"])
 
-    model = MyDNNModel(input_size=x.size(-1), output_size=y.size(-1)).to(device)
+    test_x, test_y = x[2], y[2]
+
+    model = MyDNNModel(input_size=test_x.size(-1), output_size=test_y.size(-1)).to(device)
     model.load_state_dict(model_dict)
 
     # Test
-    test(model, x.to(device), y.to(device), to_be_shown=True)
+    test(model, test_x, test_y, to_be_shown=True)
 
 if __name__ == "__main__":
     main()
